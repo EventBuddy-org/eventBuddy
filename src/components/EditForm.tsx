@@ -35,6 +35,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { generateImage } from "@/lib/imageGenerator";
 import { EventData } from "@/app/events/[slug]/page";
+import { telegramNotify, updateEvent } from "@/app/actions/actions";
 
 const formSchema = z.object({
   title: z
@@ -46,9 +47,9 @@ const formSchema = z.object({
     .min(1, "Description is required")
     .max(500, "Description must be 500 characters or less"),
   venue: z.string().min(1),
-  endDate: z.any(),
-  eventStatus: z.string(),
-  startDate: z.any(),
+  startDate: z.string(),
+  endDate: z.string(),
+  eventStatus: z.enum(["DRAFT", "PUBLISHED"]),
   image: z.string(),
   theme: z.string(),
 });
@@ -75,18 +76,16 @@ export default function EditEventForm({ event }: { event: EventData }) {
     },
   });
   console.log(form.formState.defaultValues);
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      //TODO
+      await updateEvent(event.id, values);
+      toast.success("Event updated successfully");
       if (reflect && customMessage) {
-        //call telegram
+        const res = await telegramNotify(customMessage);
+        if (res) {
+          toast.success("Telegram notification sent successfully");
+        }
       }
-      // update event
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");

@@ -60,7 +60,7 @@ model EventPosters {
 model User {
   id             String          @id @default(uuid()) @map("_id")
   name           String?
-  email          String?         @unique
+  email          String         @unique
   emailVerified  DateTime?
   image          String?
   accounts       Account[]

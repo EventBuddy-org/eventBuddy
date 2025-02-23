@@ -101,7 +101,7 @@ export async function registerEvent(eventId: string) {
   }
 }
 
-const updateEvent = async (eventId: string, data: createEventType) => {
+export const updateEvent = async (eventId: string, data: createEventType) => {
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
     redirect("/login");
@@ -129,6 +129,47 @@ const updateEvent = async (eventId: string, data: createEventType) => {
     return {
       error: false,
       event,
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: "An error occurred",
+    };
+  }
+};
+
+export const telegramNotify = async (message: string) => {
+  const session = await auth();
+  if (!session || !session.user || !session.user.id) {
+    redirect("/login");
+  }
+  try {
+    const telegramChatId = await prisma.user.findUnique({
+      where: {
+        id: session.user.id,
+      },
+      select: {
+        telegramChatId: true,
+      },
+    });
+
+    const res = await fetch(
+      `https://eventee-event-buddy-bot.vercel.app/submit`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chatId: telegramChatId?.telegramChatId,
+          message,
+        }),
+      }
+    );
+    const response = await res.json();
+    return {
+      error: false,
+      response,
     };
   } catch (error) {
     return {

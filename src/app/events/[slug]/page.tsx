@@ -15,7 +15,6 @@ export default async function IndividualEventPage({
   if (!event) {
     return <div>Event not found</div>;
   }
-  console.log({ event });
 
   return <IndividualEventClient session={session} event={event} />;
 }

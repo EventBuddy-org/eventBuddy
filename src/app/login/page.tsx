@@ -1,10 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Github, Mail } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const session = useSession();
+  if (session.data?.user) return router.replace("/");
   return (
     <div
       className="flex"

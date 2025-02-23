@@ -85,23 +85,38 @@ export default function IndividualEventClient({
         <p className="p-5">{event.description}</p>
       </div>
 
-      <div className="mt-10 border shadow-md rounded-lg">
-        <h2 className="p-5 font-bold text-2xl">Attendees</h2>
-        <div className="p-5 flex flex-wrap gap-3">
-          {event.attendees.map((att, index) => (
-            <div key={index} className="flex flex-col">
-              <Image
-                alt={att.id}
-                src={String(att.attendee.image)}
-                width={300}
-                height={300}
-                className="size-10"
-              />
-              <span>{att.attendee.name}</span>
-            </div>
-          ))}
+      {session?.user?.id == event.organizer.id ? (
+        <div className="mt-10 border shadow-md rounded-lg">
+          <h2 className="p-5 font-bold text-2xl">Attendees</h2>
+          <div className="p-5 flex flex-wrap gap-3">
+            {event.attendees.length ? (
+              event.attendees.map((att, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col gap-1 justify-center items-center"
+                >
+                  <Image
+                    alt={att.id}
+                    src={String(att.attendee.image)}
+                    width={300}
+                    height={300}
+                    className="size-10 rounded-full"
+                  />
+                  <span className="text-sm">
+                    {att.attendee.name?.split(" ")[0]}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div className="w-full text-destructive">
+                No attendees has registered yet
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

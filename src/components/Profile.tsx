@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export function Profile() {
   const session = useSession();
   return (
-    <Card className="w-full max-w-lg">
+    <Card>
       <CardHeader className="space-y-6">
         <div className="flex justify-center">
           <Avatar className="h-24 w-24">
@@ -52,7 +52,7 @@ export function Profile() {
           <div
             onClick={async () => {
               await navigator.clipboard.writeText(
-                session?.data?.user?.id as string,
+                session?.data?.user?.id as string
               );
               toast.info("Copied to clipboard");
             }}
@@ -62,7 +62,10 @@ export function Profile() {
             <Copy size={16} />
           </div>
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-between">
+          <Button type="button" onClick={() => signOut()}>
+            Logout
+          </Button>
           <Button type="submit">Save Changes</Button>
         </div>
       </CardContent>

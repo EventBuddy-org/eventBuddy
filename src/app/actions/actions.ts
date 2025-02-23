@@ -61,11 +61,16 @@ export async function getEvent(eventId: string) {
     where: {
       id: eventId,
     },
-    include:{
+    include: {
       organizer: true,
-    }
+      attendees: {
+        include: {
+          attendee: true,
+        },
+      },
+      posters: true,
+    },
   });
-
   return event;
 }
 

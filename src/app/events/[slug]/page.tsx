@@ -1,3 +1,4 @@
+import { getEvent } from "@/app/actions/actions";
 import { Button } from "@/components/ui/button";
 import { Calendar, PinIcon } from "lucide-react";
 import Image from "next/image";
@@ -8,28 +9,20 @@ export default async function IndividualEventPage({
   params: Promise<{ slug: string }>;
 }) {
   const slug = (await params).slug;
-  const event = {
-    eventName: "TechSphere 2025",
-    description:
-      "A premier technology conference bringing together innovators, developers, and industry leaders to discuss the future of tech.",
-    organizer: "InnovateTech Solutions",
-    venue: "Grand Convention Center, San Francisco, CA",
-    startDate: "2025-09-15T09:00:00Z",
-    endDate: "2025-09-17T18:00:00Z",
-    image:
-      "https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg",
-    theme: "Shaping the Future with AI & Blockchain",
-  };
+  const event = await getEvent(slug);
+  if (!event) {
+    return <div>Event not found</div>;
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-5">
       <div className="grid grid-cols-2 gap-5 border shadow-md p-8 rounded-lg">
         <div className="flex flex-col justify-between">
           <div>
-            <h1 className="font-bold text-3xl">{event.eventName}</h1>
+            <h1 className="font-bold text-3xl">{event.title}</h1>
             <p className="mt-1">
               <strong>Organized By: </strong>
-              {event.organizer}
+              {event.organizer.name}
             </p>
             <div className="mt-10 flex flex-col justify-between gap-5">
               <div className="flex gap-3 items-center">
@@ -49,7 +42,7 @@ export default async function IndividualEventPage({
         </div>
         <Image
           src={event.image}
-          alt={event.eventName}
+          alt={event.title}
           width={300}
           className="ml-auto rounded-lg"
           height={400}

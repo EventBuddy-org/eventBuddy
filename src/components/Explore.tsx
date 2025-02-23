@@ -5,7 +5,7 @@ import { getEvents } from "@/app/actions/actions";
 
 export default async function Explore() {
   const eventsData = await getEvents();
-  console.log(eventsData)
+  console.log(eventsData);
   return (
     <div className="max-w-5xl mx-auto w-full px-4">
       <div className="grid grid-cols-3 gap-8 w-full">
@@ -13,6 +13,7 @@ export default async function Explore() {
           <EventCard
             key={index}
             eventData={{
+              id: eventData.id,
               eventName: eventData.title,
               description: eventData.description,
               organizer: eventData.organizerId, // Assuming organizerId is the organizer's name
@@ -32,6 +33,7 @@ function EventCard({
   eventData,
 }: {
   eventData: {
+    id: string;
     eventName: string;
     description: string;
     organizer: string;
@@ -43,7 +45,7 @@ function EventCard({
   };
 }) {
   return (
-    <Link href={`/events/${eventData.eventName}`}>
+    <Link href={`/events/${eventData.id}`}>
       <Card className="rounded-xl overflow-hidden">
         <Image
           src={eventData.image}

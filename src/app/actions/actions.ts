@@ -61,6 +61,9 @@ export async function getEvent(eventId: string) {
     where: {
       id: eventId,
     },
+    include:{
+      organizer: true,
+    }
   });
 
   return event;

@@ -34,6 +34,7 @@ import {
 } from "./ui/dialog";
 import { Loader2 } from "lucide-react";
 import { generateImage } from "@/lib/imageGenerator";
+import { EventData } from "@/app/events/[slug]/page";
 
 const formSchema = z.object({
   title: z
@@ -52,26 +53,12 @@ const formSchema = z.object({
   theme: z.string(),
 });
 
-export default function EditEventForm({
-  event,
-}: {
-  event: {
-    eventName: string;
-    description: string;
-    organizer: string;
-    venue: string;
-    startDate: any;
-    endDate: any;
-    image: string;
-    eventStatus: string;
-    theme: string;
-  };
-}) {
+export default function EditEventForm({ event }: { event: EventData }) {
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: event?.eventName || "",
+      title: event?.title || "",
       venue: event?.venue || "",
       endDate:
         new Date(event?.endDate).toISOString().substring(0, 16) ||

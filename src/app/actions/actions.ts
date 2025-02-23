@@ -71,7 +71,7 @@ export async function getEvent(eventId: string) {
       posters: true,
     },
   });
-  return event;
+  return event!;
 }
 
 export async function registerEvent(eventId: string) {

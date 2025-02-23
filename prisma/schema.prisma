@@ -24,7 +24,7 @@ model Event {
   description String
   startDate   DateTime
   endDate     DateTime
-  location    String
+  venue       String
   theme       String
   eventStatus EventStatus
   image       String
@@ -44,6 +44,7 @@ model EventAttendees {
   attendee   User     @relation(fields: [attendeeId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
   @@unique([eventId, attendeeId])
 }
 

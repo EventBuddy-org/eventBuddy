@@ -34,8 +34,9 @@ import {
 } from "./ui/dialog";
 import { Loader2 } from "lucide-react";
 import { generateImage } from "@/lib/imageGenerator";
+import { createEvent } from "@/app/actions/actions";
 
-const formSchema = z.object({
+export const createFormSchema = z.object({
   title: z
     .string()
     .min(1, "Title is required")
@@ -45,37 +46,41 @@ const formSchema = z.object({
     .min(1, "Description is required")
     .max(500, "Description must be 500 characters or less"),
   venue: z.string().min(1),
-  endDate: z.any(),
-  eventStatus: z.string(),
-  startDate: z.any(),
+  startDate: z.string(),
+  endDate: z.string(),
+  eventStatus: z.enum(["DRAFT", "PUBLISHED"]),
   image: z.string(),
   theme: z.string(),
 });
 
 export default function CreateEventForm() {
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof createFormSchema>>({
+    resolver: zodResolver(createFormSchema),
     defaultValues: {
       title: "",
       venue: "",
-      endDate: "",
-      eventStatus: "",
+      eventStatus: "DRAFT",
       description: "",
-      startDate: "",
+      startDate: new Date().toISOString(),
+      endDate: new Date().toISOString(),
       image: "",
       theme: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof createFormSchema>) {
     try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
+      const result = createFormSchema.safeParse(values);
+      if (!result.success) {
+        throw new Error("Validation failed");
+      }
+      const { error } = await createEvent(result.data);
+      if (error) {
+        throw new Error("Failed to create event");
+      }
+      toast.success("Event created successfully");
+      form.reset();
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
@@ -211,13 +216,8 @@ export default function CreateEventForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="m@example.com">
-                        m@example.com
-                      </SelectItem>
-                      <SelectItem value="m@google.com">m@google.com</SelectItem>
-                      <SelectItem value="m@support.com">
-                        m@support.com
-                      </SelectItem>
+                      <SelectItem value="DRAFT">Draft</SelectItem>
+                      <SelectItem value="PUBLISHED">Published</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -247,7 +247,9 @@ export default function CreateEventForm() {
             />
           </div>
         </div>
-        <Button className="w-full h-10" type="submit">Submit</Button>
+        <Button className="w-full h-10" type="submit">
+          Submit
+        </Button>
       </form>
     </Form>
   );

@@ -3,6 +3,7 @@
 ## Overview
 EventBuddy is a modern event management platform that allows users to explore and host events effortlessly. What makes EventBuddy stand out is its one-click event poster generation using Generative AI, making event promotion seamless and visually appealing.
 
+
 Additionally, EventBuddy integrates with Telegram and Discord, ensuring real-time updates are delivered to social channels whenever an organizer makes any changes to an event.
 
 ## Features

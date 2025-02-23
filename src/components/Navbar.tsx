@@ -10,20 +10,27 @@ import {
 } from "./ui/dialog";
 import { Profile } from "./Profile";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
+import ChangeThemeButton from "./changeTheme";
 
 export default function Navbar() {
   const session = useSession();
   return (
-    <div className="h-20 bg-gray-50 px-4 sm:px-8">
+    <div className="h-20 bg-card px-4 sm:px-8">
       <div className="w-full flex items-center justify-between">
         <Link href={"/"}>
-          <Image src={"/logo.svg"} height={100} width={160} alt="logo" />
+          <Image
+            src={"/logo.svg"}
+            height={100}
+            width={160}
+            alt="logo"
+            className="dark:invert"
+          />
         </Link>
         <div className="flex items-center space-x-4">
-          <Link href="/" className="text-black hover:underline">
+          <Link href="/" className="text-foreground hover:underline">
             Explore
           </Link>
-          <Link href="/create" className="text-black hover:underline">
+          <Link href="/create" className="text-foreground hover:underline">
             Create Event
           </Link>
           {session.data?.user?.image ? (
@@ -52,6 +59,7 @@ export default function Navbar() {
               Login
             </Link>
           )}
+          <ChangeThemeButton />
         </div>
       </div>
     </div>

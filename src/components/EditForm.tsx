@@ -123,10 +123,10 @@ export default function EditEventForm({ event }: { event: EventData }) {
 
           <FormField
             control={form.control}
-            name="venue"
+            name="theme"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Venue</FormLabel>
+                <FormLabel>Theme</FormLabel>
                 <FormControl>
                   <Input
                     placeholder=""
@@ -260,7 +260,7 @@ export default function EditEventForm({ event }: { event: EventData }) {
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 h-12">
             <div className="flex items-center gap-1">
               <input
                 type="checkbox"
@@ -269,11 +269,13 @@ export default function EditEventForm({ event }: { event: EventData }) {
               />
               <span className="text-sm w-max">Reflect on telegram</span>
             </div>
-            <Input
-              placeholder="Custom message for telegram..."
-              defaultValue={customMessage}
-              onChange={(e) => setCustomMessage(e.currentTarget.value)}
-            />
+            {reflect && (
+              <Input
+                placeholder="Custom message for telegram..."
+                defaultValue={customMessage}
+                onChange={(e) => setCustomMessage(e.currentTarget.value)}
+              />
+            )}
           </div>
           <Button className="w-full h-10" type="submit">
             Update

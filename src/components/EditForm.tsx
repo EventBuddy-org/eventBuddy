@@ -55,6 +55,7 @@ const formSchema = z.object({
 
 export default function EditEventForm({ event }: { event: EventData }) {
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [reflect, setReflect] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,7 +76,10 @@ export default function EditEventForm({ event }: { event: EventData }) {
   console.log(form.formState.defaultValues);
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
+      //TODO
+      if (reflect) {
+        //call telegram
+      }
       toast(
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -253,9 +257,19 @@ export default function EditEventForm({ event }: { event: EventData }) {
             />
           </div>
         </div>
-        <Button className="w-full h-10" type="submit">
-          Submit
-        </Button>
+        <div className="flex flex-col items-end gap-4">
+          <div className="flex items-center gap-1">
+            <input
+              type="checkbox"
+              checked={reflect}
+              onChange={() => setReflect((prev) => !prev)}
+            />
+            <span className="text-sm">Reflect on telegram</span>
+          </div>
+          <Button className="w-full h-10" type="submit">
+            Update
+          </Button>
+        </div>
       </form>
     </Form>
   );

@@ -5,7 +5,6 @@ import { getEvents } from "@/app/actions/actions";
 
 export default async function Explore() {
   const eventsData = await getEvents();
-  console.log(eventsData);
   return (
     <div className="max-w-5xl mx-auto w-full px-4">
       <div className="grid grid-cols-3 gap-8 w-full">

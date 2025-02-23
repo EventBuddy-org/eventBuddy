@@ -35,6 +35,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { generateImage } from "@/lib/imageGenerator";
 import { createEvent } from "@/app/actions/actions";
+import { uploadImagetoCloudinary } from "@/lib/uploadImageToCloudinary";
 
 export const createFormSchema = z.object({
   title: z
@@ -58,23 +59,29 @@ export default function CreateEventForm() {
   const form = useForm<z.infer<typeof createFormSchema>>({
     resolver: zodResolver(createFormSchema),
     defaultValues: {
-      title: "",
-      venue: "",
-      eventStatus: "DRAFT",
-      description: "",
+      title: "Diversion tech",
+      venue: "Sector 5",
+      eventStatus: "PUBLISHED",
+      description: "Organized by IEM Calcutta",
       startDate: new Date().toISOString(),
       endDate: new Date().toISOString(),
       image: "",
-      theme: "",
+      theme: "Retro",
     },
   });
-
+  const [isLoading, setIsLoading] = useState(false);
   async function onSubmit(values: z.infer<typeof createFormSchema>) {
     try {
+      setIsLoading(true);
+      if (!croppedImage) throw new Error("Image not uploaded yet");
       const result = createFormSchema.safeParse(values);
       if (!result.success) {
         throw new Error("Validation failed");
       }
+      result.data.image = (await uploadImagetoCloudinary(
+        croppedImage
+      )) as string;
+
       const { error } = await createEvent(result.data);
       if (error) {
         throw new Error("Failed to create event");
@@ -84,6 +91,8 @@ export default function CreateEventForm() {
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -116,10 +125,10 @@ export default function CreateEventForm() {
 
           <FormField
             control={form.control}
-            name="venue"
+            name="theme"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Venue</FormLabel>
+                <FormLabel>Theme</FormLabel>
                 <FormControl>
                   <Input
                     placeholder=""
@@ -247,8 +256,15 @@ export default function CreateEventForm() {
             />
           </div>
         </div>
-        <Button className="w-full h-10" type="submit">
-          Submit
+        <Button className="w-full h-10 flex items-center gap-1" type="submit">
+          {isLoading ? (
+            <>
+              <Loader2 className="animate-spin" />
+              Creating...
+            </>
+          ) : (
+            "Create"
+          )}
         </Button>
       </form>
     </Form>

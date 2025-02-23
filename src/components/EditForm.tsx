@@ -56,6 +56,7 @@ const formSchema = z.object({
 export default function EditEventForm({ event }: { event: EventData }) {
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const [reflect, setReflect] = useState<boolean>(false);
+  const [customMessage, setCustomMessage] = useState<string>("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -77,9 +78,10 @@ export default function EditEventForm({ event }: { event: EventData }) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       //TODO
-      if (reflect) {
+      if (reflect && customMessage) {
         //call telegram
       }
+      // update event
       toast(
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -257,14 +259,21 @@ export default function EditEventForm({ event }: { event: EventData }) {
             />
           </div>
         </div>
-        <div className="flex flex-col items-end gap-4">
-          <div className="flex items-center gap-1">
-            <input
-              type="checkbox"
-              checked={reflect}
-              onChange={() => setReflect((prev) => !prev)}
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={reflect}
+                onChange={() => setReflect((prev) => !prev)}
+              />
+              <span className="text-sm w-max">Reflect on telegram</span>
+            </div>
+            <Input
+              placeholder="Custom message for telegram..."
+              defaultValue={customMessage}
+              onChange={(e) => setCustomMessage(e.currentTarget.value)}
             />
-            <span className="text-sm">Reflect on telegram</span>
           </div>
           <Button className="w-full h-10" type="submit">
             Update
@@ -303,7 +312,11 @@ export default function EditEventForm({ event }: { event: EventData }) {
 
     return (
       <>
-        <Button type="button" onClick={() => setOpen(true)}>
+        <Button
+          variant={"secondary"}
+          type="button"
+          onClick={() => setOpen(true)}
+        >
           Generate with AI
         </Button>
         <Dialog modal open={open} onOpenChange={setOpen}>

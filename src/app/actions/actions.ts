@@ -107,7 +107,7 @@ export const updateEvent = async (eventId: string, data: createEventType) => {
     redirect("/login");
     return;
   }
-
+  console.log("-----HELLO WORLD");
   try {
     const event = await prisma.event.update({
       where: {
@@ -143,6 +143,7 @@ export const telegramNotify = async (message: string) => {
   if (!session || !session.user || !session.user.id) {
     redirect("/login");
   }
+  console.log("CALLED OK");
   try {
     const telegramChatId = await prisma.user.findUnique({
       where: {
@@ -161,12 +162,13 @@ export const telegramNotify = async (message: string) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          chatId: telegramChatId?.telegramChatId,
-          message,
+          chat_id: telegramChatId?.telegramChatId,
+          update:message,
         }),
       }
     );
     const response = await res.json();
+    console.log({ response, telegramChatId });
     return {
       error: false,
       response,

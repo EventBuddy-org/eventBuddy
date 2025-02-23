@@ -9,8 +9,8 @@ export default async function Home() {
   console.log(session);
   return (
     <div>
-      <Explore />
-      {/* <CreateEvent /> */}
+      {/* <Explore /> */}
+      <CreateEvent />
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
 import { getEvents } from "@/app/actions/actions";
 import { EventCard } from "@/components/EventCard";
+import { Button } from "./ui/button";
+import { ArrowRight } from "lucide-react";
 
 export default async function Explore() {
   const eventsData = await getEvents();
@@ -20,6 +22,11 @@ export default async function Explore() {
           <p className="text-center text-muted-foreground my-2.5 mb-8">
             Discover and join amazing events happening around you
           </p>
+          <Button className="bg-white hover:bg-white text-black rounded-full max-w-36 w-fit transition-all duration-300 ease-in-out hover:w-full flex items-center justify-between px-4">
+            <span>Let's Explore</span>
+            <ArrowRight className="opacity-80 transition-opacity duration-300 ease-in-out" />
+          </Button>
+
           <div
             className="absolute -z-10 h-96 w-96 rounded-full bg-gradient-to-br from-blue-200 via-pink-300 to-amber-300 opacity-10 blur-[100px]"
             style={{
